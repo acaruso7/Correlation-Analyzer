@@ -1,0 +1,13 @@
+name: Correlation-Analyzer
+title: Correlation-Analyzer
+username:
+account: acaruso7
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1015197
+bundleId: 2208194
+url: https://acaruso7.shinyapps.io/Correlation-Analyzer/
+when: 1562524069.9202
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: kc_house_data.csv|README.md

@@ -15,8 +15,9 @@ fluidPage(
                                selected = NULL, inline = FALSE, width = NULL)
         ),
         mainPanel(
-            if (is.null(tableOutput("dataHead")) == FALSE)
+            if (is.null(tableOutput("dataHead")) == FALSE) {
                 plotOutput("scatter")
+            }
         )
     )
 )

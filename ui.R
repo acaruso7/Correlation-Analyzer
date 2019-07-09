@@ -12,12 +12,12 @@ fluidPage(
             checkboxGroupInput(inputId='corrType', label="Correlation Type", 
                                choices=c('Continuous - Continuous (Pearson)', "Categorical - Categorical (Kramer's V)", 
                                          'Continuous - Categorical (Correlation Ratio)'), 
-                               selected = NULL, inline = FALSE, width = NULL)
+                               selected = NULL, inline = FALSE, width = NULL),
+            uiOutput("continuousVars")
         ),
         mainPanel(
-            if (is.null(tableOutput("dataHead")) == FALSE) {
-                plotOutput("scatter")
-            }
+            plotOutput("scatter"),
+            plotOutput("heatmap")
         )
     )
 )

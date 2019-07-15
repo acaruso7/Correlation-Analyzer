@@ -7,17 +7,31 @@ fluidPage(
             fileInput("file", "Choose Clean CSV File to Analyze (must include headers)",
                       accept = c("text/csv","text/comma-separated-values,text/plain",".csv")
             ),
-            uiOutput("xvars"), # dropdowns for selecting variable names
-            uiOutput("yvars"),
             checkboxGroupInput(inputId='corrType', label="Correlation Type", 
                                choices=c('Continuous - Continuous (Pearson)', "Categorical - Categorical (Kramer's V)", 
                                          'Continuous - Categorical (Correlation Ratio)'), 
-                               selected = NULL, inline = FALSE, width = NULL),
-            uiOutput("continuousVars")
+                               selected = NULL, inline = FALSE, width = NULL)
         ),
         mainPanel(
-            plotOutput("scatter"),
-            plotOutput("heatmap")
+            column(6,
+                wellPanel(
+                    h3("Scatterplot"),
+                    fluidRow(
+                        column(6, uiOutput("xvars")),
+                        column(6, uiOutput("yvars"))    
+                    ),
+                    fluidRow(
+                        column(12, plotOutput("scatter"))
+                    )
+                )
+            ),
+            column(6,
+                wellPanel(
+                    h3("Heatmap"),
+                    uiOutput("continuousVars"),
+                    plotOutput("heatmap")   
+                )
+            )
         )
     )
 )

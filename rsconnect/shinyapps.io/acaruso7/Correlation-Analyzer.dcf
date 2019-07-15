@@ -5,9 +5,9 @@ account: acaruso7
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 1015197
-bundleId: 2216188
+bundleId: 2235024
 url: https://acaruso7.shinyapps.io/Correlation-Analyzer/
-when: 1562709076.01162
+when: 1563234124.86008
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: kc_house_data.csv|README.md
+ignoredFiles: kc_house_data.csv|README.md|img/fileInput.png|img/heatmap.png|img/scatterplot.png

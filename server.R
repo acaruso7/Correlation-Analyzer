@@ -31,11 +31,11 @@ function(input, output) {
     # inputs for scatterplot
     output$xvars =
         renderUI({ # send list of available variable name choices to UI
-            selectInput(inputId='selected_xvar', label="Select X Variable", choices=colnames(getData()), selected=input$selected_xvar)
+            selectInput(inputId='selected_xvar', label="X Variable", choices=colnames(getData()), selected=input$selected_xvar)
         })
     output$yvars =
         renderUI({
-            selectInput(inputId='selected_yvar', label="Select Y Variable", choices=colnames(getData()), selected=input$selected_yvar)
+            selectInput(inputId='selected_yvar', label="Y Variable", choices=colnames(getData()), selected=input$selected_yvar)
         })
     
     output$scatter = renderPlot({
@@ -56,10 +56,10 @@ function(input, output) {
     output$heatmapVars = 
         renderUI({
             if(input$corrType=='Continuous - Continuous (Pearson)') {
-                selectInput(inputId='heatmap_vars', label="Select Continuous Variables", 
+                selectInput(inputId='heatmap_vars', label="Continuous Variables", 
                             choices=input$contvars, multiple=TRUE, selected=input$contvars[1:2])
             } else {
-                selectInput(inputId='heatmap_vars', label="Select Nominal Categorical Variables", 
+                selectInput(inputId='heatmap_vars', label="Nominal Categorical Variables", 
                             choices=input$catvars, multiple=TRUE, selected=input$catvars[1:2])
             }
         })
@@ -91,26 +91,27 @@ function(input, output) {
     
     
     # inputs for barchart
-    # output$barChartTitle
     output$contcorrvar = 
         renderUI({
-            selectInput(inputId='contcorrvar', label="Select Continuous Variable", choices=colnames(getData()), selected=input$contcorrvar)
+            selectInput(inputId='contcorrvar', label="Continuous Variable", choices=colnames(getData()), selected=input$contcorrvar)
         })
     output$catcorrvars = 
         renderUI({
-            selectInput(inputId='catcorrvars', label="Select Categorical Variables", multiple=TRUE,
+            selectInput(inputId='catcorrvars', label="Categorical Variables", multiple=TRUE,
                         choices=colnames(getData()), selected=input$catcorrvars[1:3])
         })
     
     output$barchart = renderPlot({
-        cont_var = 
-        selected_vars = input$heatmap_vars
+        cont_var = input$contcorrvar
+        cat_corr_vars = input$catcorrvarss
         
         df = getData()
         if (is.null(df)==FALSE) {
-            req(selected_vars)
-            features = df[,selected_vars]
-            ggplot()
+            req(cont_var)
+            req(cat_corr_vars)
+            # features = df[,selected_vars]
+            ggplot(data=df, aes(x=cat_corr_vars[1], y=cont_var)) +
+                geom_bar(stat="identity")
         }
     })
 }

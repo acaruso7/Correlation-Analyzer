@@ -25,7 +25,8 @@ fluidPage(
                            fluidRow(
                                column(12, plotOutput("scatter", height="350px"))
                            )
-                       )
+                       ),
+                       style="margin-bottom:-20px;"
                 ),
                 column(6,
                        wellPanel(
@@ -43,20 +44,21 @@ fluidPage(
                 column(6,
                        wellPanel(
                            fluidRow(
-                               column(4, h3("Correlation Ratios", style="margin-top:5px; text-align:center;")),
+                               column(3, h3("Correlation Ratios", style="margin-top:-5px; text-align:center;")),
                                column(4, uiOutput("contcorrvar", style="margin-top:-10px")),
-                               column(4, uiOutput("catcorrvars", style="margin-top:-10px"))
+                               column(5, uiOutput("catcorrvars", style="margin-top:-10px"))
                            ),
                            fluidRow(
                                column(12, plotOutput("barchart", height="350px"))
-                           ),
-                           style="padding:-50px;"
-                       )
+                           )
+                       ),
+                       style="margin-top:-10px;"
                 ),
                 column(6,
                        wellPanel(
 
-                       )
+                       ),
+                       style="margin-top:-10px;"
                 )
             ),
             style="margin-top:-50px;"

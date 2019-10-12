@@ -15,6 +15,7 @@ fluidPage(
         ),
         mainPanel(
             fluidRow(
+                # SCATTERPLOT TOP LEFT
                 column(6,
                        wellPanel(
                            fluidRow(
@@ -28,6 +29,7 @@ fluidPage(
                        ),
                        style="margin-bottom:-20px;"
                 ),
+                # HEATMAP TOP RIGHT
                 column(6,
                        wellPanel(
                            fluidRow(
@@ -41,6 +43,7 @@ fluidPage(
                 )
             ),
             fluidRow(
+                # BAR CHART BOTTOM LEFT
                 column(6,
                        wellPanel(
                            fluidRow(
@@ -54,6 +57,7 @@ fluidPage(
                        ),
                        style="margin-top:-10px;"
                 ),
+                # ANOVA BOTTOM RIGHT
                 column(6,
                        wellPanel(
 

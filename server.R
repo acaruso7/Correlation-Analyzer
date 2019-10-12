@@ -1,3 +1,4 @@
+rm(list=ls())
 library(shiny)
 library(ggplot2)
 library(reshape2)
@@ -93,25 +94,28 @@ function(input, output) {
     # inputs for barchart
     output$contcorrvar = 
         renderUI({
-            selectInput(inputId='contcorrvar', label="Continuous Variable", choices=colnames(getData()), selected=input$contcorrvar)
+            selectInput(inputId='contcorrvar', label="Continuous Variable", choices=input$contvars, selected=input$contvars[1])
         })
     output$catcorrvars = 
         renderUI({
             selectInput(inputId='catcorrvars', label="Categorical Variables", multiple=TRUE,
-                        choices=colnames(getData()), selected=input$catcorrvars[1:3])
+                        choices=input$catvars, selected=input$catvars[1:3])
         })
     
     output$barchart = renderPlot({
         cont_var = input$contcorrvar
-        cat_corr_vars = input$catcorrvarss
+        cat_corr_vars = input$catcorrvars
         
         df = getData()
         if (is.null(df)==FALSE) {
             req(cont_var)
             req(cat_corr_vars)
+            for (i in cat_corr_vars) {
+                print(i)
+            }
             # features = df[,selected_vars]
-            ggplot(data=df, aes(x=cat_corr_vars[1], y=cont_var)) +
-                geom_bar(stat="identity")
+            # ggplot(data=df, aes(x=cat_corr_vars[1], y=cont_var)) +
+            #     geom_bar(stat="identity")
         }
     })
 }

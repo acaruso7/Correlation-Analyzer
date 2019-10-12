@@ -14,25 +14,52 @@ fluidPage(
                                          'Continuous - Categorical (Correlation Ratio)'))
         ),
         mainPanel(
-            column(6,
-                wellPanel(
-                    h3("Scatterplot"),
-                    fluidRow(
-                        column(6, uiOutput("xvars")),
-                        column(6, uiOutput("yvars"))  
-                    ),
-                    fluidRow(
-                        column(12, plotOutput("scatter"))
-                    )
+            fluidRow(
+                column(6,
+                       wellPanel(
+                           fluidRow(
+                               column(4, h2("Scatterplot", style="margin-top:5px; text-align:center;")),
+                               column(4, uiOutput("xvars", style="margin-top:-10px")),
+                               column(4, uiOutput("yvars", style="margin-top:-10px"))  
+                           ),
+                           fluidRow(
+                               column(12, plotOutput("scatter", height="350px"))
+                           )
+                       )
+                ),
+                column(6,
+                       wellPanel(
+                           fluidRow(
+                               column(5, uiOutput("corrTypeTitle")),
+                               column(7, uiOutput("heatmapVars", style="margin-top:-10px"))
+                           ),
+                           fluidRow(
+                               column(12, plotOutput("heatmap", height="350px"))
+                           )
+                       )
                 )
             ),
-            column(6,
-                wellPanel(
-                    uiOutput("corrTypeTitle"),
-                    uiOutput("heatmapVars"),
-                    plotOutput("heatmap")   
+            fluidRow(
+                column(6,
+                       wellPanel(
+                           fluidRow(
+                               column(4, h3("Correlation Ratios", style="margin-top:5px; text-align:center;")),
+                               column(4, uiOutput("contcorrvar", style="margin-top:-10px")),
+                               column(4, uiOutput("catcorrvars", style="margin-top:-10px"))
+                           ),
+                           fluidRow(
+                               column(12, plotOutput("barchart", height="350px"))
+                           ),
+                           style="padding:-50px;"
+                       )
+                ),
+                column(6,
+                       wellPanel(
+
+                       )
                 )
-            )
+            ),
+            style="margin-top:-50px;"
         )
     )
 )

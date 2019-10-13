@@ -2,6 +2,7 @@ rm(list=ls())
 library(shiny)
 library(ggplot2)
 library(reshape2)
+library(lsr)
 
 function(input, output) {
     getData = reactive({
@@ -28,6 +29,7 @@ function(input, output) {
             }
             selectInput(inputId='catvars', label="Select Nominal Categorical Variables", multiple=TRUE, choices=choices)
         })
+    
     
     # inputs for scatterplot
     output$xvars =
@@ -94,7 +96,7 @@ function(input, output) {
     # inputs for barchart
     output$contcorrvar = 
         renderUI({
-            selectInput(inputId='contcorrvar', label="Continuous Variable", choices=input$contvars, selected=input$contvars[1])
+            selectInput(inputId='contcorrvar', label="Continuous Variable", choices=input$contvars, selected=input$contvars)
         })
     output$catcorrvars = 
         renderUI({
@@ -108,14 +110,27 @@ function(input, output) {
         
         df = getData()
         if (is.null(df)==FALSE) {
-            req(cont_var)
-            req(cat_corr_vars)
-            for (i in cat_corr_vars) {
-                print(i)
+            req(cont_var, cat_corr_vars)
+            
+            eta = c()
+            for (var in cat_corr_vars) {
+                anova <- aov(df[,cont_var] ~ factor(as.vector(df[,var])))
+                print(paste("eta for", var, ":", as.character(etaSquared(anova)[2])))
+                eta = c(eta, etaSquared(anova)[2])
             }
-            # features = df[,selected_vars]
-            # ggplot(data=df, aes(x=cat_corr_vars[1], y=cont_var)) +
-            #     geom_bar(stat="identity")
+            corr_ratios = data.frame(cat = cat_corr_vars,
+                                     eta = eta)
+            # corr_ratios$cat <- factor(x$cat, levels = corr_ratios$cat[order(corr_ratios$eta)])
+            # corr_ratios = corr_ratios[order(corr_ratios$eta, decreasing=TRUE),]
+            
+            tryCatch({
+                ggplot(corr_ratios, aes_string(x="cat", y="eta")) +
+                    geom_col(fill="#000080") +
+                    xlab("Eta (observed - fitted correlation)") + ylab("Group")
+                },
+                error = function(e) {
+                    message("cannot input contrinuous variables")
+                })
         }
     })
 }

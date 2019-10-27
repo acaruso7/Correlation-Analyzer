@@ -1,8 +1,10 @@
 rm(list=ls())
+setwd("~/dev/R/shiny_apps/Correlation-Analyzer")
 library(shiny)
 library(ggplot2)
 library(reshape2)
 library(lsr)
+
 
 function(input, output) {
     output$sampledata =
@@ -14,6 +16,7 @@ function(input, output) {
         })
     
     loadSampleData = reactive({
+        req(input$sampledata)
         if (input$sampledata=="King's County Housing Data") {
             df = read.csv("https://raw.githubusercontent.com/acaruso7/Correlation-Analyzer/grid_layout/data/kc_house_data.csv", header=TRUE)
         } else if (input$sampledata=="Boston Housing Data") {
@@ -23,27 +26,29 @@ function(input, output) {
         return(df)
     })
     
-    
     getData = reactive({
         inFile = input$file
-        if (is.null(inFile)) { #load sample dataset
+        if (is.null(inFile)) {
             df = loadSampleData()
-            return(df)
         } else {
             df = read.csv(inFile$datapath, header = TRUE)
-            return(df)
         }
+        return(df)
     })
     
     # inputs for all plots
     output$contvars =
         renderUI({
-            selectInput(inputId='contvars', label="Select Continuous & Ordinal Variables", multiple=TRUE, choices=colnames(getData()))
+            df = getData()
+            req(df)
+            selectInput(inputId='contvars', label="Select Continuous & Ordinal Variables", multiple=TRUE, choices=colnames(df))
         })
     output$catvars =
         renderUI({
+            df = getData()
+            req(df)
             choices = c()
-            for (var in colnames(getData())) {
+            for (var in colnames(df)) {
                 if (!(var %in% input$contvars)) {
                     choices = c(choices, var)
                 }
@@ -55,23 +60,33 @@ function(input, output) {
     # inputs for scatterplot
     output$xvars =
         renderUI({ # send list of available variable name choices to UI
-            selectInput(inputId='selected_xvar', label="X Variable", choices=colnames(getData()), selected=input$selected_xvar)
+            df = getData()
+            req(df)
+            selectInput(inputId='selected_xvar', label="X Variable", choices=colnames(df), selected=input$selected_xvar)
         })
     output$yvars =
         renderUI({
-            selectInput(inputId='selected_yvar', label="Y Variable", choices=colnames(getData()), selected=input$selected_yvar)
+            df = getData()
+            req(df)
+            selectInput(inputId='selected_yvar', label="Y Variable", choices=colnames(df), selected=input$selected_yvar)
         })
     
     output$scatter = renderPlot({
+        df = getData()
+        req(df)
+        
+        features = colnames(df)
+        
         selected_xvar = input$selected_xvar
         selected_yvar = input$selected_yvar
+        req(selected_xvar, selected_yvar)
         
-        df = getData()
         if (is.null(df)==FALSE) {
-            req(selected_xvar, selected_yvar)
-            ggplot(df, aes_string(x=selected_xvar, y=selected_yvar)) +
-                geom_point(shape=1, col="blue") +
-                geom_smooth(method=lm) + xlab(selected_xvar) + ylab(selected_yvar)
+            if (selected_xvar %in% features & selected_yvar %in% features) {
+                ggplot(df, aes_string(x=selected_xvar, y=selected_yvar)) +
+                    geom_point(shape=1, col="blue") +
+                    geom_smooth(method=lm) + xlab(selected_xvar) + ylab(selected_yvar)
+            }
         }
     })
     

@@ -6,9 +6,9 @@ fluidPage(
         sidebarPanel(
             uiOutput("sampledata"),
             fluidRow(
-                column(10,fileInput("file", "Input your own CSV file",
+                column(10,fileInput("file", "Input a CSV file",
                                    accept = c("text/csv","text/comma-separated-values,text/plain",".csv"))),
-                column(2,actionButton("refresh", "Refresh", style="margin-top:24.4px"))
+                column(2,actionButton("refresh", "Refresh", style="margin-top:24.5px"))
             ),
             uiOutput("contvars"),
             uiOutput("catvars")
@@ -29,7 +29,7 @@ fluidPage(
                        ),
                        style="margin-top:5px; margin-bottom:-20px;"
                 ),
-                # HEATMAP TOP RIGHT
+                # PEARSON HEATMAP TOP RIGHT
                 column(6,
                        wellPanel(
                            fluidRow(
@@ -62,7 +62,7 @@ fluidPage(
                 column(6,
                        wellPanel(
                            fluidRow(
-                               column(5, h3("Heatmap: Kramer's V Statistic", style="margin-top:-5px; text-align:center;")),
+                               column(5, h3("Heatmap: Cramer's V Statistic", style="margin-top:-5px; text-align:center;")),
                                column(7, uiOutput("kramersHeatmapVars", style="margin-top:-10px"))
                            ),
                            fluidRow(

@@ -1,9 +1,10 @@
 rm(list=ls())
-setwd("~/dev/R/shiny_apps/Correlation-Analyzer")
 library(shiny)
 library(ggplot2)
 library(reshape2)
 library(lsr)
+library(DescTools)
+library(rsconnect)
 
 
 function(input, output, session) {
@@ -99,13 +100,6 @@ function(input, output, session) {
     # inputs for heatmaps
     output$pearsonHeatmapVars = 
         renderUI({
-            # if(input$corrType=='Continuous - Continuous (Pearson)') {
-            #     selectInput(inputId='heatmap_vars', label="Continuous Variables", 
-            #                 choices=input$contvars, multiple=TRUE, selected=input$contvars[1:2])
-            # } else {
-            #     selectInput(inputId='heatmap_vars', label="Nominal Categorical Variables", 
-            #                 choices=input$catvars, multiple=TRUE, selected=input$catvars[1:2])
-            # }
             selectInput(inputId='pearson_heatmap_vars', label="Continuous Variables", 
                         choices=input$contvars, multiple=TRUE, selected=input$contvars[1:4])
         })
@@ -135,18 +129,8 @@ function(input, output, session) {
         if (is.null(df)==FALSE) {
             req(selected_vars)
             features = df[,selected_vars]
-            
-            # cramersV_stats = c()
-            # for (var in colnames(features)) {
-            #     cols_to_correlate = data.frame(v1 = features[,var],
-            #                                    v2 = features[,var])
-            #     cramersV_stats = c(cramersV_stats, cramersV(features[,colname]))
-            # }
-            
-            # cramersV(X)
-            
-            cormat <- round(cor(as.matrix(sapply(features, as.numeric)), use="pairwise.complete.obs"), 2)
-            melted_cormat <- melt(cormat)
+            cramersV_matrix = PairApply(features, CramerV, symmetric = TRUE)
+            melted_cormat = melt(cramersV_matrix)
             ggplot(data = melted_cormat, aes(x=Var1, y=Var2, fill=value)) + geom_tile()
         }
     })

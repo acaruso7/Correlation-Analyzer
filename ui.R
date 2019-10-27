@@ -4,6 +4,7 @@ fluidPage(
     titlePanel("Correlation Analyzer"),
     sidebarLayout(
         sidebarPanel(
+            uiOutput("sampledata"),
             fileInput("file", "Choose Clean CSV File to Analyze (must include headers)",
                       accept = c("text/csv","text/comma-separated-values,text/plain",".csv")
             ),

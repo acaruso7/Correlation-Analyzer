@@ -5,13 +5,34 @@ library(reshape2)
 library(lsr)
 
 function(input, output) {
+    output$sampledata =
+        renderUI({
+            selectInput(inputId='sampledata', 
+                        label="Load a sample dataset", 
+                        multiple=FALSE, 
+                        choices=c("King's County Housing Data", "Boston Housing Data"))
+        })
+    
+    loadSampleData = reactive({
+        if (input$sampledata=="King's County Housing Data") {
+            df = read.csv("https://raw.githubusercontent.com/acaruso7/Correlation-Analyzer/grid_layout/data/kc_house_data.csv", header=TRUE)
+        } else if (input$sampledata=="Boston Housing Data") {
+            df = read.table("https://raw.githubusercontent.com/acaruso7/Correlation-Analyzer/grid_layout/data/boston_housing.csv", header = FALSE, sep = "")
+            colnames(df) = c("CRIM","ZN","INDUS","CHAS","NAX","RM","AGE","DIS","RAD","TAX","PTRATIO","B","LSTAT","MEDV")
+        }
+        return(df)
+    })
+    
+    
     getData = reactive({
         inFile = input$file
-        if (is.null(inFile)) {
-            return(NULL) 
+        if (is.null(inFile)) { #load sample dataset
+            df = loadSampleData()
+            return(df)
+        } else {
+            df = read.csv(inFile$datapath, header = TRUE)
+            return(df)
         }
-        df = read.csv(inFile$datapath, header = TRUE)
-        return(df)
     })
     
     # inputs for all plots

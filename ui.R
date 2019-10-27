@@ -5,8 +5,10 @@ fluidPage(
     sidebarLayout(
         sidebarPanel(
             uiOutput("sampledata"),
-            fileInput("file", "Choose Clean CSV File to Analyze (must include headers)",
-                      accept = c("text/csv","text/comma-separated-values,text/plain",".csv")
+            fluidRow(
+                column(10,fileInput("file", "Input your own CSV file",
+                                   accept = c("text/csv","text/comma-separated-values,text/plain",".csv"))),
+                column(2,actionButton("refresh", "Refresh", style="margin-top:24.4px"))
             ),
             uiOutput("contvars"),
             uiOutput("catvars"),

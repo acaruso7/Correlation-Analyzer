@@ -6,7 +6,7 @@ library(reshape2)
 library(lsr)
 
 
-function(input, output) {
+function(input, output, session) {
     output$sampledata =
         renderUI({
             selectInput(inputId='sampledata', 
@@ -28,13 +28,18 @@ function(input, output) {
     
     getData = reactive({
         inFile = input$file
-        if (is.null(inFile)) {
+        if (is.null(input$file)) {
             df = loadSampleData()
         } else {
             df = read.csv(inFile$datapath, header = TRUE)
         }
         return(df)
     })
+    
+    observeEvent(input$refresh, {
+        session$reload()
+    })
+
     
     # inputs for all plots
     output$contvars =

@@ -97,39 +97,57 @@ function(input, output, session) {
     
     
     # inputs for heatmaps
-    output$heatmapVars = 
+    output$pearsonHeatmapVars = 
         renderUI({
-            if(input$corrType=='Continuous - Continuous (Pearson)') {
-                selectInput(inputId='heatmap_vars', label="Continuous Variables", 
-                            choices=input$contvars, multiple=TRUE, selected=input$contvars[1:2])
-            } else {
-                selectInput(inputId='heatmap_vars', label="Nominal Categorical Variables", 
-                            choices=input$catvars, multiple=TRUE, selected=input$catvars[1:2])
-            }
+            # if(input$corrType=='Continuous - Continuous (Pearson)') {
+            #     selectInput(inputId='heatmap_vars', label="Continuous Variables", 
+            #                 choices=input$contvars, multiple=TRUE, selected=input$contvars[1:2])
+            # } else {
+            #     selectInput(inputId='heatmap_vars', label="Nominal Categorical Variables", 
+            #                 choices=input$catvars, multiple=TRUE, selected=input$catvars[1:2])
+            # }
+            selectInput(inputId='pearson_heatmap_vars', label="Continuous Variables", 
+                        choices=input$contvars, multiple=TRUE, selected=input$contvars[1:4])
         })
-    output$corrTypeTitle =
+    output$kramersHeatmapVars = 
         renderUI({
-            if(input$corrType=='Continuous - Continuous (Pearson)') {
-                h3("Heatmap: Pearson Correlation", style="margin-top:-5px; text-align:center;")
-            } else if(input$corrType=="Categorical - Categorical (Kramer's V)") {
-                h3("Heatmap: Cramer's V Statistic", style="margin-top:-5px; text-align:center;")
-            }
+            selectInput(inputId='kramers_heatmap_vars', label="Nominal Variables", 
+                        choices=input$catvars, multiple=TRUE, selected=input$catvars[1:4])
         })
     
-    output$heatmap = renderPlot({
-        selected_vars = input$heatmap_vars
+    output$pearsonHeatmap = renderPlot({
+        selected_vars = input$pearson_heatmap_vars
 
         df = getData()
         if (is.null(df)==FALSE) {
             req(selected_vars)
             features = df[,selected_vars]
-            if (input$corrType=='Continuous - Continuous (Pearson)') {
-                cormat <- round(cor(as.matrix(sapply(features, as.numeric)), use="pairwise.complete.obs"), 2)
-                melted_cormat <- melt(cormat)
-                ggplot(data = melted_cormat, aes(x=Var1, y=Var2, fill=value)) + geom_tile()
-            } else {
-                
-            }
+            cormat <- round(cor(as.matrix(sapply(features, as.numeric)), use="pairwise.complete.obs"), 2)
+            melted_cormat <- melt(cormat)
+            ggplot(data = melted_cormat, aes(x=Var1, y=Var2, fill=value)) + geom_tile()
+        }
+    })
+    
+    output$kramersHeatmap = renderPlot({
+        selected_vars = input$kramers_heatmap_vars
+        
+        df = getData()
+        if (is.null(df)==FALSE) {
+            req(selected_vars)
+            features = df[,selected_vars]
+            
+            # cramersV_stats = c()
+            # for (var in colnames(features)) {
+            #     cols_to_correlate = data.frame(v1 = features[,var],
+            #                                    v2 = features[,var])
+            #     cramersV_stats = c(cramersV_stats, cramersV(features[,colname]))
+            # }
+            
+            # cramersV(X)
+            
+            cormat <- round(cor(as.matrix(sapply(features, as.numeric)), use="pairwise.complete.obs"), 2)
+            melted_cormat <- melt(cormat)
+            ggplot(data = melted_cormat, aes(x=Var1, y=Var2, fill=value)) + geom_tile()
         }
     })
     
@@ -137,12 +155,12 @@ function(input, output, session) {
     # inputs for barchart
     output$contcorrvar = 
         renderUI({
-            selectInput(inputId='contcorrvar', label="Continuous Variable", choices=input$contvars, selected=input$contvars)
+            selectInput(inputId='contcorrvar', label="Continuous Variable", choices=input$contvars, selected=input$contvars[1])
         })
     output$catcorrvars = 
         renderUI({
             selectInput(inputId='catcorrvars', label="Categorical Variables", multiple=TRUE,
-                        choices=input$catvars, selected=input$catvars[1:3])
+                        choices=input$catvars, selected=input$catvars)
         })
     
     output$barchart = renderPlot({
@@ -156,21 +174,18 @@ function(input, output, session) {
             eta = c()
             for (var in cat_corr_vars) {
                 anova <- aov(df[,cont_var] ~ factor(as.vector(df[,var])))
-                print(paste("eta for", var, ":", as.character(etaSquared(anova)[2])))
                 eta = c(eta, etaSquared(anova)[2])
             }
             corr_ratios = data.frame(cat = cat_corr_vars,
                                      eta = eta)
-            # corr_ratios$cat <- factor(x$cat, levels = corr_ratios$cat[order(corr_ratios$eta)])
-            # corr_ratios = corr_ratios[order(corr_ratios$eta, decreasing=TRUE),]
             
             tryCatch({
-                ggplot(corr_ratios, aes_string(x="cat", y="eta")) +
+                ggplot(corr_ratios, aes_string(x="reorder(cat, -eta)", y="eta")) +
                     geom_col(fill="#000080") +
-                    xlab("Eta (observed - fitted correlation)") + ylab("Group")
+                    xlab("Group") + ylab("Eta (observed - fitted correlation)")
                 },
                 error = function(e) {
-                    message("cannot input contrinuous variables")
+                    message("cannot input continuous variables")
                 })
         }
     })

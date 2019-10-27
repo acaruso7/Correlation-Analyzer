@@ -11,10 +11,7 @@ fluidPage(
                 column(2,actionButton("refresh", "Refresh", style="margin-top:24.4px"))
             ),
             uiOutput("contvars"),
-            uiOutput("catvars"),
-            radioButtons(inputId='corrType', label="Correlation Type", 
-                               choices=c('Continuous - Continuous (Pearson)', "Categorical - Categorical (Kramer's V)", 
-                                         'Continuous - Categorical (Correlation Ratio)'))
+            uiOutput("catvars")
         ),
         mainPanel(
             fluidRow(
@@ -27,22 +24,23 @@ fluidPage(
                                column(4, uiOutput("yvars", style="margin-top:-10px"))  
                            ),
                            fluidRow(
-                               column(12, plotOutput("scatter", height="350px"))
+                               column(12, plotOutput("scatter", height="340px"))
                            )
                        ),
-                       style="margin-bottom:-20px;"
+                       style="margin-top:5px; margin-bottom:-20px;"
                 ),
                 # HEATMAP TOP RIGHT
                 column(6,
                        wellPanel(
                            fluidRow(
-                               column(5, uiOutput("corrTypeTitle")),
-                               column(7, uiOutput("heatmapVars", style="margin-top:-10px"))
+                               column(5, h3("Heatmap: Pearson Correlation", style="margin-top:-5px; text-align:center;")),
+                               column(7, uiOutput("pearsonHeatmapVars", style="margin-top:-10px"))
                            ),
                            fluidRow(
-                               column(12, plotOutput("heatmap", height="350px"))
+                               column(12, plotOutput("pearsonHeatmap", height="340px"))
                            )
-                       )
+                       ),
+                       style="margin-top:5px; margin-bottom:-20px;"
                 )
             ),
             fluidRow(
@@ -55,17 +53,23 @@ fluidPage(
                                column(5, uiOutput("catcorrvars", style="margin-top:-10px"))
                            ),
                            fluidRow(
-                               column(12, plotOutput("barchart", height="350px"))
+                               column(12, plotOutput("barchart", height="340px"))
                            )
                        ),
-                       style="margin-top:-10px;"
+                       style="margin-top:15px;"
                 ),
-                # ANOVA BOTTOM RIGHT
+                # KRAMER'S V BOTTOM RIGHT
                 column(6,
                        wellPanel(
-
+                           fluidRow(
+                               column(5, h3("Heatmap: Kramer's V Statistic", style="margin-top:-5px; text-align:center;")),
+                               column(7, uiOutput("kramersHeatmapVars", style="margin-top:-10px"))
+                           ),
+                           fluidRow(
+                               column(12, plotOutput("kramersHeatmap", height="340px"))
+                           )
                        ),
-                       style="margin-top:-10px;"
+                       style="margin-top:15px;"
                 )
             ),
             style="margin-top:-50px;"

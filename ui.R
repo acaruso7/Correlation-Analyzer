@@ -10,8 +10,16 @@ fluidPage(
                                    accept = c("text/csv","text/comma-separated-values,text/plain",".csv"))),
                 column(2,actionButton("refresh", "Refresh", style="margin-top:24.5px"))
             ),
-            uiOutput("contvars"),
-            uiOutput("catvars")
+            h3("Map Datatypes"),
+            wellPanel(
+                fluidRow(
+                    column(6, p(textOutput("allvars", container = pre))),
+                    column(6, h5("Dtype"))
+                )
+            )
+            # ,
+            # uiOutput("contvars"),
+            # uiOutput("catvars")
         ),
         mainPanel(
             fluidRow(

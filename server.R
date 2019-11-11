@@ -42,6 +42,16 @@ function(input, output, session) {
     })
 
     
+    output$allvars =
+        renderPrint({
+            df = getData()
+            req(df)
+            for (var in colnames(df)) {
+                writeLines(paste(var, '\n'))
+            }
+        })
+    
+    
     # inputs for all plots
     output$contvars =
         renderUI({

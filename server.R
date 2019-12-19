@@ -50,6 +50,37 @@ function(input, output, session) {
                 writeLines(paste(var, '\n'))
             }
         })
+    # output$allvars2 =
+    #     renderPrint({
+    #         df = getData()
+    #         req(df)
+    #         for (var in colnames(df)) {
+    #             writeLines(paste(var, '\n'))
+    #         }
+    #     })
+    output$dtypedropdowns <- renderUI({
+        num_dropdowns = dim(getData())[2]
+        
+        for (i in seq(1, num_dropdowns)) {
+            # selectInput(inputId=as.character(i), "label", choices = c("1","2","3"))
+            print(i)
+        }
+        
+        # lapply(1:num, function(i) {
+        #     selectInput(paste0("n_input_", i), label = paste0("n_input", i),  
+        #                 choices = list("CEO" = 1, "CSO" = 2, "SECRETARY" = 3), 
+        #                 selected = 1)
+        # })
+    })
+    # output$dtypes = 
+    #     renderUI({
+    #         num_dtypes = dim(getData())[2]
+    #         
+    #         for (i in seq(1, num_dtypes)) {
+    #             writeLines(as.character(i))
+    #         }
+    #         
+    #     })
     
     
     # inputs for all plots

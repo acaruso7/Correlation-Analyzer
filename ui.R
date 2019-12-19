@@ -10,11 +10,23 @@ fluidPage(
                                    accept = c("text/csv","text/comma-separated-values,text/plain",".csv"))),
                 column(2,actionButton("refresh", "Refresh", style="margin-top:24.5px"))
             ),
-            h3("Map Datatypes"),
+            h3("Map Variable Types"),
             wellPanel(
                 fluidRow(
-                    column(6, p(textOutput("allvars", container = pre))),
-                    column(6, h5("Dtype"))
+                    column(6, 
+                        fluidRow(
+                            h3("Variable"),
+                            p(textOutput("allvars", container = pre))
+                        )
+                    ),
+                    column(6, 
+                        fluidRow(
+                            h3("Type"),
+                            # h4("test new row")
+                            # p(textOutput("allvars2", container = pre))
+                            uiOutput("dtypedropdowns")
+                        )
+                    )
                 )
             )
             # ,
